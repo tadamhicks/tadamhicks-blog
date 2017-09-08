@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Blog entries{% endblock %}
+
+{% block content_title %}{% if search %}Search "{{ search }}"{% else %}Blog entries{% endif %}{% endblock %}
+
+{% block content %}
+{% for entry in object_list %}
+    {% if search %}
+      {% set entry = entry.entry %}
+    {% endif %}
+    <h3>
+      <a href="{% if entry.published %}{{ url_for('detail', slug=entry.slug) }}{% else %}{{ url_for('edit', slug=entry.slug) }}{% endif %}">
+        {{ entry.title }}
+      </a>
+      {% if session.logged_in %}
+      <a href="https://www.w3schools.com">
+        <img src="{{ url_for('static', filename='images/trashcan.png') }}" alt="HTML tutorial" style="width:12px;height:12px;border:0;" title="delete post">
+      </a>
+      {% endif %}
+    </h3>
+    <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %G:%I%p') }}</p>
+    {% else %}
+    <p>No entries have been created yet.</p>
+    {% endfor %}
+  {% include "includes/pagination.html" %}
+{% endblock %}
